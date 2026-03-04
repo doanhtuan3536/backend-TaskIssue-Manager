@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: config-server-plan-management
+  cloud:
+    config:
+      server:
+        git:
+          uri: git@github.com:doanhtuan3536/config-server-plan-management.git
+          #          ignore-local-ssh-settings: true
+          private-key-path: ${GIT_SSH_KEY}
+#  security:
+#    user:
+#      name: ${CONFIG_USERNAME}
+#      password: ${CONFIG_PASS}
+
+server:
+  port: 8888
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+#encrypt:
+#  key: mySecretKey123456
+#encrypt:
+#  rsa:
+#    key:
+#      location: ${CONFIG_SERVER_ENCRYPT_PRIVATE_KEY_PATH:D:\java\openssl-key\private_key.pem}
+#encrypt:
+#  keyStore:
+#    location: file:${CONFIG_SERVER_ENCRYPT_PRIVATE_KEY_PATH:D:\java\openssl-key\private_key.pem}
+#encrypt:
+#  rsa:
+#    key:
+#      location: file:${CONFIG_SERVER_ENCRYPT_PRIVATE_KEY_PATH:D:/java/openssl-key/private_key_pkcs8.pem}
+encrypt:
+  keyStore:
+    location: file:${CONFIG_SERVER_ENCRYPT_PRIVATE_KEY_PATH}
+    password: ${CONFIG_SERVER_PRIVATE_KEY_PASS}
+    alias: config-server
+

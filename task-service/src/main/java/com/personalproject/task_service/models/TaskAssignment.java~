@@ -1,0 +1,27 @@
+package com.personalproject.task_service.models;
+
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "task_assignment")
+public class TaskAssignment extends BaseEntity {
+    @EmbeddedId
+    private TaskAssignmentId id;
+
+    @OneToOne
+    @MapsId("taskId")
+    @JoinColumn(name = "task_id")
+    private ProjectTask task;
+
+    @Column(name = "assign_user_id")
+    private Long assignUserId;
+
+    public TaskAssignment(LocalDateTime createdAt, LocalDateTime updatedAt, Boolean deleted, TaskAssignmentId id, ProjectTask task, Long assignUserId) {
+        super(createdAt, updatedAt, deleted);
+        this.id = id;
+        this.task = task;
+        this.assignUserId = assignUserId;
+    }
+}

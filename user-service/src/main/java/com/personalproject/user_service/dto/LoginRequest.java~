@@ -1,0 +1,5 @@
+package com.personalproject.user_service.dto;
+
+public class LoginRequest {
+    private String refreshToken;
+}

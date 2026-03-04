@@ -1,0 +1,18 @@
+#spring.application.name=user-service
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: user-service
+  config:
+    import: optional:configserver:http://config-server-plan-management
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server-plan-management
+      username: ${CONFIG_USERNAME}
+      password: ${CONFIG_PASS}

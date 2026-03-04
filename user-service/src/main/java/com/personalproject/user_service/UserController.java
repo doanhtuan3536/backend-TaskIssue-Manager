@@ -1,0 +1,85 @@
+package com.personalproject.user_service;
+
+import com.personalproject.user_service.dto.LoginForm;
+import com.personalproject.user_service.dto.LogoutRequest;
+import com.personalproject.user_service.models.AccountType;
+import com.personalproject.user_service.security.auth.AuthResponse;
+import com.personalproject.user_service.security.auth.TokenService;
+import com.personalproject.user_service.security.config.CustomUserDetails;
+import com.personalproject.user_service.security.jwt.JwtUtility;
+import com.personalproject.user_service.security.refreshtoken.RefreshTokenNotFoundException;
+import com.personalproject.user_service.services.RefreshTokenService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/api/v1/users")
+public class UserController {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private  UserService userService;
+    @Autowired
+    @Qualifier("userAuthManager")
+    private AuthenticationManager userAuthManager;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+//    @Autowired
+//    @Qualifier("serviceAuthManager")
+//    private AuthenticationManager serviceAuthManager;
+    //    private final JwtUtility jwtUtil;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private JwtUtility jwtUtil;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginForm body) {
+        try {
+            String username = body.getUsername();
+            String password = body.getPassword();
+
+            Authentication authentication = userAuthManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
+            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            AuthResponse token = tokenService.generateTokens(customUserDetails.getUser());
+            token.setUserId(customUserDetails.getUser().getUserId());
+            token.setUsername(username);
+            token.setAvatar(customUserDetails.getUser().getAvatar());
+            token.setRole(AccountType.valueOf(customUserDetails.getAuthorities().iterator().next().getAuthority().toUpperCase()));
+            token.setHoten(customUserDetails.getUser().getFullName());
+            System.out.println(token);
+            return ResponseEntity.ok(token);
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody LogoutRequest request) {
+        Integer refreshTokenId = request.getRefreshTokenId();
+        System.out.println(refreshTokenId);
+
+        try {
+//            String refreshTokenDecoded = passwordEncoder.encode(refreshToken);
+//            System.out.println(refreshTokenDecoded);
+            refreshTokenService.revokeRefreshToken(refreshTokenId);
+        } catch (RefreshTokenNotFoundException e) {
+//            throw new RuntimeException(e);
+            System.out.println("Token not found");
+        }
+        return ResponseEntity.ok().build();
+    }
+}

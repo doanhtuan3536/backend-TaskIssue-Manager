@@ -1,0 +1,40 @@
+package com.personalproject.task_service.models;
+
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "plan_management_tasks")
+public class PlanManagementTask extends BaseEntity {
+
+    @Id
+    @Column(name = "task_id")
+    private Long taskId;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "task_id")
+    private ProjectTask projectTask;
+
+    private Integer points;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "estimate_hour")
+    private Double estimateHour;
+
+    // Simple string storage (comma separated)
+    private String tags;
+
+    public PlanManagementTask(LocalDateTime createdAt, LocalDateTime updatedAt, Boolean deleted,
+                              ProjectTask projectTask, Integer points, String description, Double estimateHour, String tags) {
+        super(createdAt, updatedAt, deleted);
+        this.projectTask = projectTask;
+        this.points = points;
+        this.description = description;
+        this.estimateHour = estimateHour;
+        this.tags = tags;
+    }
+}

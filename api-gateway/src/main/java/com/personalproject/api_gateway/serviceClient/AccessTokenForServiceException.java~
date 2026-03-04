@@ -1,0 +1,4 @@
+package com.personalproject.api_gateway.serviceClient;
+
+public class AccessTokenForServiceException extends RuntimeException {
+}

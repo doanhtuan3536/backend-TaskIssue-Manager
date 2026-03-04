@@ -1,0 +1,80 @@
+package com.personalproject.api_gateway.models;
+
+import lombok.Builder;
+
+@Builder
+public class OpaqueTokenResponse {
+    private String opaqueToken;
+    private String refreshToken;
+    private long expiresIn;
+    private String tokenType = "Bearer";
+
+    private String username;
+    private Long userId;
+    private Long refreshTokenId;
+    private String avatar;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public Long getRefreshTokenId() {
+        return refreshTokenId;
+    }
+
+    public void setRefreshTokenId(Long refreshTokenId) {
+        this.refreshTokenId = refreshTokenId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getOpaqueToken() {
+        return opaqueToken;
+    }
+
+    public void setOpaqueToken(String opaqueToken) {
+        this.opaqueToken = opaqueToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public long getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(long expiresIn) {
+        this.expiresIn = expiresIn;
+    }
+
+    public String getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
+    }
+}

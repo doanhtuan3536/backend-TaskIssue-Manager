@@ -1,0 +1,42 @@
+package com.personalproject.task_service.models;
+
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "activities")
+public class Activity extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "activity_id")
+    private Long activityId;
+
+    @ManyToOne
+    @JoinColumn(name = "task_id")
+    private ProjectTask task;
+
+    @Enumerated(EnumType.STRING)
+    private ActivityField field;
+
+    @Column(name = "old_value", columnDefinition = "TEXT")
+    private String oldValue;
+
+    @Column(name = "new_value", columnDefinition = "TEXT")
+    private String newValue;
+
+    @Column(name = "user_id")
+    private Long userId;
+
+    public Activity(LocalDateTime createdAt, LocalDateTime updatedAt, Boolean deleted, ProjectTask task,
+                    Long activityId, ActivityField field, String oldValue, String newValue, Long userId) {
+        super(createdAt, updatedAt, deleted);
+        this.task = task;
+        this.activityId = activityId;
+        this.field = field;
+        this.oldValue = oldValue;
+        this.newValue = newValue;
+        this.userId = userId;
+    }
+}

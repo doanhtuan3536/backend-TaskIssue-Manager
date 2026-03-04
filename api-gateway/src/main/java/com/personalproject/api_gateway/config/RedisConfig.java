@@ -1,0 +1,69 @@
+package com.personalproject.api_gateway.config;
+
+import com.personalproject.api_gateway.models.TokenInfo;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
+
+@Configuration
+public class RedisConfig {
+//    @Bean
+//    public ObjectMapper objectMapper() {
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.registerModule(new JavaTimeModule());
+//        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+//        return mapper;
+//    }
+//
+//    @Bean
+//    public RedisTemplate<String, TokenInfo> redisTemplate(
+//            RedisConnectionFactory connectionFactory,
+//            ObjectMapper objectMapper) {
+//
+//        RedisTemplate<String, TokenInfo> template = new RedisTemplate<>();
+//        template.setConnectionFactory(connectionFactory);
+//
+//        // Key serializer
+//        StringRedisSerializer stringSerializer = new StringRedisSerializer();
+//        template.setKeySerializer(stringSerializer);
+//        template.setHashKeySerializer(stringSerializer);
+//
+//        // Value serializer (JSON)
+//        GenericJackson2JsonRedisSerializer jsonSerializer =
+//                new GenericJackson2JsonRedisSerializer(objectMapper);
+//        template.setValueSerializer(jsonSerializer);
+//        template.setHashValueSerializer(jsonSerializer);
+//
+//        template.afterPropertiesSet();
+//        return template;
+//    }
+//
+//    @Bean
+//    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory connectionFactory) {
+//        return new StringRedisTemplate(connectionFactory);
+//    }
+    @Bean
+    public RedisTemplate<String, TokenInfo> redisTemplate(
+            RedisConnectionFactory connectionFactory) {
+
+        RedisTemplate<String, TokenInfo> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        // Use RedisSerializer.json() - the recommended approach in Spring Data Redis 4+
+        template.setKeySerializer(RedisSerializer.string());
+        template.setValueSerializer(RedisSerializer.json());
+        template.setHashKeySerializer(RedisSerializer.string());
+        template.setHashValueSerializer(RedisSerializer.json());
+
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean
+    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory connectionFactory) {
+        return new StringRedisTemplate(connectionFactory);
+    }
+}

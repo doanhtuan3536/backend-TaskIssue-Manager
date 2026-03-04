@@ -1,0 +1,8 @@
+package com.personalproject.task_service.models;
+
+public enum TaskPriority {
+    LOW,
+    MEDIUM,
+    HIGH,
+    URGENT
+}

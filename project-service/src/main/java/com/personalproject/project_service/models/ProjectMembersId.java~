@@ -1,0 +1,8 @@
+package com.personalproject.project_service.models;
+
+import jakarta.persistence.Embeddable;
+
+@Embeddable
+public class ProjectMembersId {
+    
+}

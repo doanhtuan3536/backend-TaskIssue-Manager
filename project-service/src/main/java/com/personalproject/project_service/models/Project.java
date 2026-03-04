@@ -1,0 +1,189 @@
+package com.personalproject.project_service.models;
+
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Table(name = "projects")
+//@EntityListeners(AuditingEntityListener.class)
+public class Project extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "project_id")
+    private Long projectId;
+
+    private String name;
+    private String description;
+
+    @Column(name = "owner_id")
+    private Long ownerId;
+
+    private String type;
+    private String accessibility;
+    private String priority;
+    private String status;
+
+    @Column(name = "start_date")
+    private LocalDateTime startDate;
+
+    @Column(name = "end_date")
+    private LocalDateTime endDate;
+
+    @Column(name = "actual_end_date")
+    private LocalDateTime actualEndDate;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectMember> members;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectSprint> sprints;
+
+
+    public List<ProjectMember> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<ProjectMember> members) {
+        this.members = members;
+    }
+
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getAccessibility() {
+        return accessibility;
+    }
+
+    public void setAccessibility(String accessibility) {
+        this.accessibility = accessibility;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    public LocalDateTime getActualEndDate() {
+        return actualEndDate;
+    }
+
+    public void setActualEndDate(LocalDateTime actualEndDate) {
+        this.actualEndDate = actualEndDate;
+    }
+
+    public List<ProjectSprint> getSprints() {
+        return sprints;
+    }
+
+    public void setSprints(List<ProjectSprint> sprints) {
+        this.sprints = sprints;
+    }
+
+    public Project(LocalDateTime createdAt, LocalDateTime updatedAt, Boolean deleted, Long projectId, String name, String description,
+                   Long ownerId, String type, String accessibility, String priority, String status, LocalDateTime startDate,
+                   LocalDateTime endDate, LocalDateTime actualEndDate, List<ProjectMember> members, List<ProjectSprint> sprints) {
+        super(createdAt, updatedAt, deleted);
+        this.projectId = projectId;
+        this.name = name;
+        this.description = description;
+        this.ownerId = ownerId;
+        this.type = type;
+        this.accessibility = accessibility;
+        this.priority = priority;
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.actualEndDate = actualEndDate;
+        this.members = members;
+        this.sprints = sprints;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "projectId=" + projectId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", ownerId=" + ownerId +
+                ", type='" + type + '\'' +
+                ", accessibility='" + accessibility + '\'' +
+                ", priority='" + priority + '\'' +
+                ", status='" + status + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", actualEndDate=" + actualEndDate +
+                ", members=" + members +
+                ", sprints=" + sprints +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", deleted=" + deleted +
+                '}';
+    }
+}

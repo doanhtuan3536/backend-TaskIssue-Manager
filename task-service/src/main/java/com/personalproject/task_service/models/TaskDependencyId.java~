@@ -1,0 +1,10 @@
+package com.personalproject.task_service.models;
+
+import jakarta.persistence.Embeddable;
+
+import java.io.Serializable;
+
+@Embeddable
+public class TaskDependencyId implements Serializable {
+    
+}

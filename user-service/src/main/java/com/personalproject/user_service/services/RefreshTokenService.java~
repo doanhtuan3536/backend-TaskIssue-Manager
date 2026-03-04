@@ -1,0 +1,22 @@
+package com.personalproject.user_service.services;
+
+import com.personalproject.user_service.repository.RefreshTokenRepository;
+import com.personalproject.user_service.security.refreshtoken.RefreshToken;
+import com.personalproject.user_service.security.refreshtoken.RefreshTokenNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class RefreshTokenService {
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public void revokeRefreshToken(Integer refreshTokenId) throws RefreshTokenNotFoundException {
+        RefreshToken token = refreshTokenRepository(refreshToken)
+                .orElseThrow(() -> new RefreshTokenNotFoundException("Token not found"));
+        refreshTokenRepository.delete(token);
+    }
+}

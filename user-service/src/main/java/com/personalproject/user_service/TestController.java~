@@ -1,0 +1,26 @@
+package com.personalproject.user_service;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.concurrent.CompletableFuture;
+
+@Controller
+public class TestController {
+
+    @GetMapping("/test")
+    public String test() {
+        Authentication auth =
+                SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(auth);
+        CompletableFuture.runAsync(() -> {
+            Authentication auth1 =
+                    SecurityContextHolder.getContext().getAuthentication();
+
+            System.out.println("from future "+ auth1); // ❌ NULL
+        });
+        return "test";
+    }
+}
