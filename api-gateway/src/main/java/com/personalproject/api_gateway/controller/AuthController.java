@@ -4,6 +4,7 @@ import com.personalproject.api_gateway.dto.AuthResponse;
 import com.personalproject.api_gateway.dto.LoginRequest;
 import com.personalproject.api_gateway.dto.LogoutRequest;
 import com.personalproject.api_gateway.models.OpaqueTokenResponse;
+import com.personalproject.api_gateway.models.TokenInfo;
 import com.personalproject.api_gateway.models.TokenPair;
 import com.personalproject.api_gateway.service.OpaqueTokenService;
 import com.personalproject.api_gateway.serviceClient.AuthServiceClient;
@@ -29,14 +30,48 @@ public class AuthController {
         this.authServiceClient = authServiceClient;
     }
 
+    @PostMapping("/validate")
+    public ResponseEntity<?> validateOpaqueToken(@CookieValue(name = "opaque_token", required = false) String opaqueToken, HttpServletResponse httpResponse) {
+        try {
+            TokenInfo tokenInfo = tokenService.validateToken(opaqueToken);
+            Long remainingSeconds = tokenService.getTtlSeconds(opaqueToken);
+            OpaqueTokenResponse response = OpaqueTokenResponse.builder()
+                    .opaqueToken(opaqueToken)
+                    .refreshToken(tokenInfo.getRefreshToken())
+                    .expiresIn(remainingSeconds)
+                    .avatar(tokenInfo.getAvatar())
+                    .refreshTokenId(tokenInfo.getRefreshTokenId())
+                    .userId(tokenInfo.getUserId())
+                    .username(tokenInfo.getUsername())
+                    .build();
+            Cookie opaqueCookie = new Cookie("opaque_token", opaqueToken);
+            opaqueCookie.setHttpOnly(true);
+            opaqueCookie.setSecure(true);
+            opaqueCookie.setPath("/");
+            opaqueCookie.setMaxAge((int)(long) remainingSeconds);
+            opaqueCookie.setAttribute("SameSite", "Strict");
+            httpResponse.addCookie(opaqueCookie);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken( @CookieValue(name = "refresh_token", required = false) String refreshToken) {
+//            tokenService.validateToken();
+        System.out.println(refreshToken);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(
             @Valid @RequestBody LoginRequest request,
             HttpServletRequest httpRequest,
             HttpServletResponse httpResponse) {
-
-
-
         try {
             // Forward login request to user service
 //            String url = userServiceUrl + "/api/login";
@@ -57,7 +92,7 @@ public class AuthController {
             // Set HTTP Only cookie for opaque token
             Cookie opaqueCookie = new Cookie("opaque_token", tokenPair.getOpaqueToken());
             opaqueCookie.setHttpOnly(true);
-            opaqueCookie.setSecure(true); // Set to true in production with HTTPS
+            opaqueCookie.setSecure(true);
             opaqueCookie.setPath("/");
             opaqueCookie.setMaxAge((int) tokenPair.getExpiresIn());
             opaqueCookie.setAttribute("SameSite", "Strict");

@@ -2,13 +2,17 @@ package com.personalproject.user_service;
 
 import com.personalproject.user_service.dto.LoginForm;
 import com.personalproject.user_service.dto.LogoutRequest;
+import com.personalproject.user_service.dto.User;
+import com.personalproject.user_service.models.Account;
 import com.personalproject.user_service.models.AccountType;
 import com.personalproject.user_service.security.auth.AuthResponse;
 import com.personalproject.user_service.security.auth.TokenService;
 import com.personalproject.user_service.security.config.CustomUserDetails;
 import com.personalproject.user_service.security.jwt.JwtUtility;
 import com.personalproject.user_service.security.refreshtoken.RefreshTokenNotFoundException;
+import com.personalproject.user_service.services.AccountService;
 import com.personalproject.user_service.services.RefreshTokenService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -19,17 +23,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/api/v1/users")
 public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
-//    @Autowired
-//    private  UserService userService;
+    @Autowired
+    private AccountService accountService;
     @Autowired
     @Qualifier("userAuthManager")
     private AuthenticationManager userAuthManager;
@@ -44,6 +46,15 @@ public class UserController {
     private TokenService tokenService;
     @Autowired
     private JwtUtility jwtUtil;
+    @Autowired
+    ModelMapper modelMapper;
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUser(@PathVariable Long userId) throws AccountNotFoundException {
+        Account user = accountService.findById(userId);
+        User user1 = modelMapper.map(user, User.class);
+        return ResponseEntity.ok(user1);
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginForm body) {

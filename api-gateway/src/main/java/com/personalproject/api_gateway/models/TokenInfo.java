@@ -11,29 +11,60 @@ import java.time.Instant;
 public class TokenInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String accessToken;      // JWT from user service
+    private String accessToken;
+    private String refreshToken;
     private Long userId;
     private String username;
     private String fullName;
     private String role;
+    private String avatar;
     private Instant createdAt;
     private Instant lastAccessTime;
     private String ipAddress;
     private String userAgent;
+    private Long refreshTokenId;
 
-    public TokenInfo(String accessToken, Long userId, String username, String fullName, String role, Instant createdAt, Instant lastAccessTime, String ipAddress, String userAgent) {
+    public TokenInfo(String accessToken, String refreshToken, Long userId, String username, String fullName, String role, String avatar,
+                     Instant createdAt, Instant lastAccessTime, String ipAddress, String userAgent, Long refreshTokenId) {
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.userId = userId;
         this.username = username;
         this.fullName = fullName;
         this.role = role;
+        this.avatar = avatar;
         this.createdAt = createdAt;
         this.lastAccessTime = lastAccessTime;
         this.ipAddress = ipAddress;
         this.userAgent = userAgent;
+        this.refreshTokenId = refreshTokenId;
     }
 
     public TokenInfo() {}
+
+    public Long getRefreshTokenId() {
+        return refreshTokenId;
+    }
+
+    public void setRefreshTokenId(Long refreshTokenId) {
+        this.refreshTokenId = refreshTokenId;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
     public String getAccessToken() {
         return accessToken;

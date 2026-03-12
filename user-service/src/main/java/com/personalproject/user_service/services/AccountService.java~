@@ -1,0 +1,17 @@
+package com.personalproject.user_service.services;
+
+import com.personalproject.user_service.AccountNotFoundException;
+import com.personalproject.user_service.models.Account;
+import com.personalproject.user_service.repository.AccountRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AccountService {
+    @Autowired private AccountRepo accountRepo;
+
+    public Account findById(Long userId) {
+        Account user = accountRepo.findById(userId).orElseThrow(() -> new AccountNotFoundException("User not found"));
+        return user;
+    }
+}

@@ -114,7 +114,7 @@ public class OpaqueTokenService {
         return tokenInfo;
     }
 
-    public Long getTtlSeconds(String opaqueToken) {
+    public getTtlSeconds(String opaqueToken) {
         String key = OPAQUE_PREFIX + opaqueToken;
         Long ttlSeconds = redisTemplate.getExpire(key, TimeUnit.SECONDS);
         return ttlSeconds;
