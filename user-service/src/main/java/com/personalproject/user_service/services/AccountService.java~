@@ -10,8 +10,16 @@ import org.springframework.stereotype.Service;
 public class AccountService {
     @Autowired private AccountRepo accountRepo;
 
-    public Account findById(Long userId) {
-        Account user = accountRepo.findById(userId).orElseThrow(() -> new AccountNotFoundException("User not found"));
+    public Account findById(Long userId) throws AccountNotFoundException {
+        Account user = accountRepo.findById(userId).orElseThrow(() -> new AccountNotFoundException("No user found with given id: " + userId));
         return user;
+    }
+
+    public void updateAvatar(Long userId, String url) {
+        Account user = accountRepo.findById(userId)
+                .orElseThrow();
+
+        user.setAvatar(url);
+        accountRepo.save(user);
     }
 }

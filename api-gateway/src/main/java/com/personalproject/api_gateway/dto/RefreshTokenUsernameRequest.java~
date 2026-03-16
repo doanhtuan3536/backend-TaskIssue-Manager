@@ -1,0 +1,2 @@
+package com.personalproject.api_gateway.dto;public class RefreshTokenUsernameRequest {
+}

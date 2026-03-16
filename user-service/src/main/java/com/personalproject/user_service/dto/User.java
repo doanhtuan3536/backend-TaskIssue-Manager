@@ -5,8 +5,11 @@ import com.personalproject.user_service.models.AccountType;
 import com.personalproject.user_service.models.Gender;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class User {
+
+    protected LocalDateTime createdAt;
 
     private Long userId;
 
@@ -28,20 +31,30 @@ public class User {
 
     private AccountStatus status;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", username='" + username + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", email='" + email + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", gender=" + gender +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", type=" + type +
-                ", status=" + status +
-                '}';
+    public User(LocalDateTime createdAt, Long userId, String username, String avatar, String email, String fullName, LocalDate dateOfBirth,
+                Gender gender, String phoneNumber, AccountType type, AccountStatus status) {
+        this.createdAt = createdAt;
+        this.userId = userId;
+        this.username = username;
+        this.avatar = avatar;
+        this.email = email;
+        this.fullName = fullName;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.type = type;
+        this.status = status;
+    }
+
+    public User() {
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Long getUserId() {

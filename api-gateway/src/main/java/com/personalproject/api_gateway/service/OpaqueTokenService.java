@@ -11,7 +11,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Set;
@@ -100,16 +99,17 @@ public class OpaqueTokenService {
         // Refresh TTL on access
         tokenInfo.setLastAccessTime(Instant.now());
         Long ttlSeconds = redisTemplate.getExpire(key, TimeUnit.SECONDS);
+        System.out.println("Token TTL: " + ttlSeconds + " seconds");
 
         if (ttlSeconds != null && ttlSeconds < 60) {
             redisTemplate.opsForValue().set(key, tokenInfo, opaqueTokenTtl, TimeUnit.SECONDS);
             System.out.println("Token renewed, new TTL: " + opaqueTokenTtl + " seconds");
         } else if (ttlSeconds != null && ttlSeconds >= 60) {
-            redisTemplate.opsForValue().set(key, tokenInfo, Duration.ofSeconds(ttlSeconds));
+            redisTemplate.opsForValue().set(key, tokenInfo, ttlSeconds, TimeUnit.SECONDS);
             System.out.println("Token updated, remaining TTL: " + ttlSeconds + " seconds");
         }
 
-        redisTemplate.opsForValue().set(key, tokenInfo);
+//        redisTemplate.opsForValue().set(key, tokenInfo);
 
         return tokenInfo;
     }
@@ -117,6 +117,7 @@ public class OpaqueTokenService {
     public Long getTtlSeconds(String opaqueToken) {
         String key = OPAQUE_PREFIX + opaqueToken;
         Long ttlSeconds = redisTemplate.getExpire(key, TimeUnit.SECONDS);
+        System.out.println("Token TTL: " + ttlSeconds + " seconds");
         return ttlSeconds;
     }
 
@@ -153,11 +154,11 @@ public class OpaqueTokenService {
         return newOpaqueToken;
     }
 
-    public void revokeToken(String opaqueToken) {
+    public void revokeToken(String opaqueToken, String refreshToken) {
         try {
             TokenInfo tokenInfo = validateToken(opaqueToken);
-
             redisTemplate.delete(OPAQUE_PREFIX + opaqueToken);
+            redisTemplate.delete(REFRESH_PREFIX + refreshToken);
             stringRedisTemplate.opsForSet()
                     .remove(USER_TOKENS_PREFIX + tokenInfo.getUserId(), opaqueToken);
 

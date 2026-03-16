@@ -64,7 +64,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         SecurityContextHolder.clearContext();
     }
 
-    private void setAuthenticationContext(com.doanth.auth_service.security.jwt.UserOfAccessToken userDetails, HttpServletRequest request) {
+    private void setAuthenticationContext(UserOfAccessToken userDetails, HttpServletRequest request) {
         var authentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
 

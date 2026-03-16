@@ -11,7 +11,15 @@ public class AccountService {
     @Autowired private AccountRepo accountRepo;
 
     public Account findById(Long userId) throws AccountNotFoundException {
-        Account user = accountRepo.findById(userId).orElseThrow(() -> new AccountNotFoundException("User not found"));
+        Account user = accountRepo.findById(userId).orElseThrow(() -> new AccountNotFoundException("No user found with given id: " + userId));
         return user;
+    }
+
+    public void updateAvatar(Long userId, String url) throws AccountNotFoundException {
+        Account user = accountRepo.findById(userId)
+                .orElseThrow(() -> new AccountNotFoundException("No user found with given id: " + userId));
+
+        user.setAvatar(url);
+        accountRepo.save(user);
     }
 }

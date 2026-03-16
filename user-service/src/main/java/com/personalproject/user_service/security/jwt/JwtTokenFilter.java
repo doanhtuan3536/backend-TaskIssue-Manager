@@ -54,6 +54,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             clearAuthenticationContext();
 
         } catch (JwtValidationException e) {
+            System.out.println(e.getMessage());
             LOGGER.error(e.getMessage(), e);
 //            filterChain.doFilter(request, response);
             exceptionResolver.resolveException(request, response, null, e);

@@ -19,7 +19,6 @@ public class AuthServiceClient {
     private final String serviceLoginUrl = serviceURL + "/login";
     private final String serviceLogoutUrl = serviceURL + "/logout";
     private final String serviceUploadAvatarUrl = serviceURL + "/upload/avatar";
-    private final String refreshTokenUrl = serviceURL + "/token/refresh";
     @Autowired
     private RestTemplate restTemplate;
 

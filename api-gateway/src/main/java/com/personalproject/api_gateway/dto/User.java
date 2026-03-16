@@ -1,8 +1,4 @@
-package com.personalproject.user_service.dto;
-
-import com.personalproject.user_service.models.AccountStatus;
-import com.personalproject.user_service.models.AccountType;
-import com.personalproject.user_service.models.Gender;
+package com.personalproject.api_gateway.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

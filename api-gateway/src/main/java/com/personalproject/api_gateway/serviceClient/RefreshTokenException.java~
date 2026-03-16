@@ -1,0 +1,2 @@
+package com.personalproject.api_gateway.serviceClient;public class RefreshTokenException {
+}

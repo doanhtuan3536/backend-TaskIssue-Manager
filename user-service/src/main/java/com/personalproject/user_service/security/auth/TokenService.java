@@ -99,6 +99,8 @@ public class TokenService {
         response.setHoten(foundRefreshToken.getUser().getFullName());
         response.setRole(foundRefreshToken.getUser().getType());
         response.setUserId(foundRefreshToken.getUser().getUserId());
+        response.setUsername(foundRefreshToken.getUser().getUsername());
+        response.setAvatar(foundRefreshToken.getUser().getAvatar());
 
         refreshTokenRepo.delete(foundRefreshToken);
 

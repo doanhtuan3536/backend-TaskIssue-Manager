@@ -9,9 +9,13 @@ import com.personalproject.user_service.security.auth.AuthResponse;
 import com.personalproject.user_service.security.auth.TokenService;
 import com.personalproject.user_service.security.config.CustomUserDetails;
 import com.personalproject.user_service.security.jwt.JwtUtility;
+import com.personalproject.user_service.security.refreshtoken.RefreshTokenExpiredException;
 import com.personalproject.user_service.security.refreshtoken.RefreshTokenNotFoundException;
+import com.personalproject.user_service.security.refreshtoken.RefreshTokenRequest;
 import com.personalproject.user_service.services.AccountService;
+import com.personalproject.user_service.services.CloudinaryService;
 import com.personalproject.user_service.services.RefreshTokenService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,6 +28,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/v1/users")
@@ -35,6 +43,9 @@ public class UserController {
     @Autowired
     @Qualifier("userAuthManager")
     private AuthenticationManager userAuthManager;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Autowired
     private RefreshTokenService refreshTokenService;
@@ -52,7 +63,9 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUser(@PathVariable Long userId) throws AccountNotFoundException {
         Account user = accountService.findById(userId);
+        System.out.println(user);
         User user1 = modelMapper.map(user, User.class);
+        System.out.println(user1);
         return ResponseEntity.ok(user1);
     }
 
@@ -93,4 +106,21 @@ public class UserController {
         }
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/upload/avatar")
+    public ResponseEntity<?> uploadAvatar(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) throws IOException, AccountNotFoundException {
+        String imageUrl = cloudinaryService.uploadFile(file);
+        accountService.updateAvatar(userId, imageUrl);
+        return ResponseEntity.ok(Map.of("url", imageUrl));
+    }
+
+    @PostMapping("/token/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody @Valid RefreshTokenRequest request) throws RefreshTokenExpiredException, RefreshTokenNotFoundException {
+        System.out.println(request.getUsername());
+        System.out.println(request.getRefreshToken());
+        AuthResponse response = tokenService.refreshTokens(request);
+        return ResponseEntity.ok(response);
+
+    }
+
 }

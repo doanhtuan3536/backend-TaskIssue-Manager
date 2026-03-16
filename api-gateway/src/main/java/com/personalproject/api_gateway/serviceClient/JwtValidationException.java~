@@ -1,0 +1,6 @@
+package com.personalproject.api_gateway.serviceClient;
+
+public class JwtValidationException extends Exception{
+
+    
+}

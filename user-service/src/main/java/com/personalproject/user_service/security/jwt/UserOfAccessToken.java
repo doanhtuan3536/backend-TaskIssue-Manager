@@ -15,7 +15,7 @@ public class UserOfAccessToken {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        authorities.add(new SimpleGrantedAuthority(this.getRole()));
+        authorities.add(new SimpleGrantedAuthority(this.getRole().toLowerCase()));
 
         return authorities;
     }
